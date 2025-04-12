@@ -1,0 +1,12 @@
+.bloop/
+.metals/
+.vscode/
+project/
+target/
+.bsp/
+.scala-build/
+.idea/
+*.iml
+*.log
+*.html
+report.html

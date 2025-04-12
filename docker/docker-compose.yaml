@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  reports:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    volumes:
+      - ../:/app
+    working_dir: /app
+    environment:
+      - ENV=production
+    command: ["java", "-jar", "app.jar"]
