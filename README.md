@@ -16,4 +16,4 @@ chmod +x cs
   - https://docs.scala-lang.org/scala3/book/scala-for-python-devs.html
   - https://dev.to/josethz00/learn-scala-in-5-minutes-12cc
   - https://jeoygin.gitbooks.io/learn-y-in-x-minutes/content/scala.html
-  - 
+  - https://youtu.be/I7-hxTbpscU?feature=shared
