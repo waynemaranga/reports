@@ -8,7 +8,7 @@ chmod +x cs
 ```
 - add the `coursier` directory to `$PATH` (probably ~/.local/share/coursier/bin/)
   - (bash) — `export PATH=$PATH`
-  - (fish) — `fish_add_path`
+  - (fish) — `fish_add_path ~/.local/share/coursier/bin/`
 - add `JAVA_HOME` environment variable to shell config (`.bashrc`, `.fishrc`) e.g
   - (bash) - `export JAVA_HOME=""` 
   - (fish) - `set -x JAVA_HOME ""`
