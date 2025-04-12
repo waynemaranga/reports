@@ -4,7 +4,6 @@
         "scala-lang.scala-snippets",
         "ms-azuretools.vscode-docker",
         "scalameta.metals",
-        "formulahendry.code-runner",
         "fill-labs.dependi"
     ]
 }
