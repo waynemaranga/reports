@@ -7,9 +7,11 @@ chmod +x cs
 ./cs # or ./cs setup
 ```
 - add the `coursier` directory to `$PATH` (probably ~/.local/share/coursier/bin/)
+  - (bash) — `export PATH=$PATH`
+  - (fish) — `fish_add_path`
 - add `JAVA_HOME` environment variable to shell config (`.bashrc`, `.fishrc`) e.g
-  - (bash) - `export PATH=$PATH` ; TODO: finish this up
-  - (fish) - `fish_add_path`; TODO: finish this up
+  - (bash) - `export JAVA_HOME=""` 
+  - (fish) - `set -x JAVA_HOME ""`
 
 2. Scala quickstarts:
   - https://learnxinyminutes.com/scala/
