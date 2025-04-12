@@ -12,5 +12,6 @@ libraryDependencies ++= Seq(
   "com.softwaremill.sttp.client3" %% "circe" % "3.9.0",
   "io.circe" %% "circe-generic" % "0.14.6",
   "com.typesafe" % "config" % "1.4.2",
-  "me.vican.jorge" %% "dotenv-scala" % "2.2.0"
+  "io.github.cdimascio" % "dotenv-java" % "3.0.0",
+  "org.postgresql" % "postgresql" % "42.7.0"  // Added explicit PostgreSQL driver
 )

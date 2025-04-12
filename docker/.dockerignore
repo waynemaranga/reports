@@ -10,3 +10,4 @@ target/
 *.log
 *.html
 report.html
+.env

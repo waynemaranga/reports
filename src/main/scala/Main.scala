@@ -8,18 +8,23 @@ import java.nio.file.{Files, Paths}
 import report.HtmlReport
 
 object Main extends IOApp.Simple {
-  val dotenv = Dotenv.load()
-  val config = ConfigFactory.load()
+  // Load configuration
+  val config = {
+    // Load environment variables from .env file first
+    Dotenv.load()
+    ConfigFactory.load()
+  }
 
-  val dbCfg = config.getConfig("db")
-  val aiCfg = config.getConfig("openai")
-
-  val transactor = Transactor.fromDriverManager[IO](
-    "org.postgresql.Driver",
-    dbCfg.getString("url"),
-    dbCfg.getString("user"),
-    dbCfg.getString("password")
-  )
+  // Create database transactor from config
+  val transactor = {
+    val dbCfg = config.getConfig("db")
+    Transactor.fromDriverManager[IO](
+      "org.postgresql.Driver",
+      dbCfg.getString("url"),
+      dbCfg.getString("user"),
+      dbCfg.getString("password")
+    )
+  }
 
   def buildPrompt(data: List[SoilTest]): String =
     s"""You are a civil engineer. Generate a report from the following soil test results:
@@ -29,20 +34,36 @@ object Main extends IOApp.Simple {
        |Provide interpretation and recommendations.
      """.stripMargin
 
-  def run: IO[Unit] = for {
-    data   <- SoilRepository.fetchData(transactor)
-    prompt = buildPrompt(data)
-    result = OpenAIClient.generateReport(prompt, aiCfg.getString("apiKey"), aiCfg.getString("model"))
-    _      <- IO.println(result.fold(err => s"Error: $err", report => s"\n--- Report ---\n$report"))
-  } yield () // inside `run`
-result match {
-  case Left(err) =>
-    IO.println(s"Error: $err")
-
-  case Right(report) =>
-    val html = HtmlReport.toHtml("Soil Test Report", report)
-    val path = Paths.get("report.html")
-    IO(Files.writeString(path, html)) *> IO.println(s"\n✅ Report written to ${path.toAbsolutePath}")
-}
-
+  def run: IO[Unit] = {
+    val aiCfg = config.getConfig("openai")
+    
+    for {
+      // Fetch soil test data
+      data <- SoilRepository.fetchData(transactor)
+      _ <- IO.println(s"Retrieved ${data.size} soil test records")
+      
+      // Generate report prompt and call OpenAI
+      prompt = buildPrompt(data)
+      reportResult <- OpenAIClient.generateReport(
+        prompt, 
+        aiCfg.getString("apiKey"), 
+        aiCfg.getString("model")
+      )
+      
+      // Process the result
+      _ <- reportResult match {
+        case Left(err) =>
+          IO.println(s"Error generating report: $err")
+          
+        case Right(report) => 
+          for {
+            _ <- IO.println(s"\n--- Report Preview ---\n${report.take(200)}...")
+            html = HtmlReport.toHtml("Soil Test Report", report)
+            path = Paths.get("report.html")
+            _ <- IO(Files.writeString(path, html))
+            _ <- IO.println(s"\n✅ Report written to ${path.toAbsolutePath}")
+          } yield ()
+      }
+    } yield ()
+  }
 }
